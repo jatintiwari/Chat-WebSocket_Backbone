@@ -10,6 +10,16 @@ public class TimeConversion {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 		return sdf.format(date);
 	}
+	public static String getSimpleDate(Long timemillis){
+		Date date = new Date(timemillis);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		return sdf.format(date);
+	}
+	public static String getSimpleTime(Long timemillis){
+		Date date = new Date(timemillis);
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+		return sdf.format(date);
+	}
 	public static String getCurrentDate(){
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

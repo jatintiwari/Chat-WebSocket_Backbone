@@ -120,8 +120,8 @@ public class MessageController {
   					jsonObject.put("fromUser", message.getFromUser());
   					jsonObject.put("toUser", message.getToUser());
   					jsonObject.put("message", message.getMessage());
-  					jsonObject.put("time", TimeConversion.getCurrentTime());
-  		    		jsonObject.put("date", TimeConversion.getCurrentDate());
+  					jsonObject.put("time", TimeConversion.getSimpleTime(message.getTime()));
+  		    		jsonObject.put("date", TimeConversion.getSimpleDate(message.getTime()));
   		    		jsonObject.put("messageRead", message.isMessageRead());
   					jsonArray.put(jsonObject);
   				}
