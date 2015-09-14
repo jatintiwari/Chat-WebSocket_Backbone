@@ -1,4 +1,4 @@
-# WebSocketDemo
+# Chat-WebSocket_Backbone
 Full duplex chat implementation with real time updates.
 
 #BackboneJS
