@@ -12,7 +12,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
 
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
-        registry.addEndpoint("/hello").withSockJS();
+        registry.addEndpoint("/hello").withSockJS().setHeartbeatTime(60000);
     }
 
     @Override
