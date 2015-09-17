@@ -12,12 +12,13 @@ defaults:{
 	j_password:""
 },
 validation:{
-	email: [{
+	j_username: [{
       required: true,
-      msg: 'Please enter an email address'
+      msg: 'Useranme is required'
     }],
-    password:{
+    j_password:{
 		required:true,
+		msg:"Password is requried"
 	}
 }
 
