@@ -9,7 +9,8 @@ define(function (require) {
 
 var ViewLoginForm = Backbone.View.extend({
 	initialize:function(){
-		this.template = _.template(require('text!login/tpl/tplLoginForm.html')); 
+		this.template = _.template(require('text!login/tpl/tplLoginForm.html'));
+		util.bindValidation(this);
 	},
 
 	events:{
@@ -19,7 +20,6 @@ var ViewLoginForm = Backbone.View.extend({
 
 	render:function(){
 		$('#formBody').empty();
-		util.bindValidation(this);
 		this.$el.html(this.template(this.model.toJSON()));
 		return this;
 	},

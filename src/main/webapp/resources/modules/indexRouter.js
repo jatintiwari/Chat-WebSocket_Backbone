@@ -22,6 +22,9 @@ define(function(require){
 		showUserChat:function(view){
 			$("#idChatList").html(view.render().el);
 		},
+		showUserFiles:function(view){
+			$("#idFilesDiv").html(view.render().el);
+		},
 
 		routes:{
 			""				:"showUsersList",
@@ -67,14 +70,15 @@ define(function(require){
 						_this.viewUsersList = new viewUserList.ViewUsersList({collection:_this.modelUsersList});
 						_this.showUserList(_this.viewUsersList);
 					}
-				})
+				});
 			});
 		},
 		
 		showChat:function(id){
 			var _this=this;
 			this.toUser=id;
-			require(["chat/model/modelChatList","chat/view/viewChat"],function(modelChatList,viewChat){
+			require(["chat/model/modelChatList","chat/model/modelFileList","chat/view/viewChat"],
+					function(modelChatList,modelFileList,viewChat){
 				_this.viewChatLayout = new viewChat.ViewUserChat();
 				_this.showChatLayout(_this.viewChatLayout);
 				_this.modelUserChatList = new modelChatList.ModelChatList();
@@ -90,7 +94,20 @@ define(function(require){
 									response.message+"</section>");
 						}
 					}
-				})
+				});
+				_this.modelFiles = new modelFileList.ModelFiles();
+				_this.modelFiles.fromUser=_this.toUser;
+				_this.modelFiles.fetch({
+					success:function(model,response,options){
+						_this.viewFilesList = new viewChat.ViewFilesList({collection:_this.modelFiles});
+						if(response.success!="false"){
+							_this.showUserFiles(_this.viewFilesList);
+						}else{
+							$("#idFilesDiv").html("<section class='text-muted h5' style='text-align: center;margin-top: 150px;'>"+
+									response.message+"</section>");
+						}
+					}
+				});
 			});
 		},
 		openWebSocketConnection:function(){
@@ -104,19 +121,19 @@ define(function(require){
 						_this.stompClient.subscribe('/user/websocket/message', function(greeting){
 							var newMessage = JSON.parse(greeting.body);
 							if(newMessage.markRead==="TRUE"){
-								if(indexRouter.modelUserChatList.at(0).attributes.fromUser == newMessage.fromUser 
-										|| indexRouter.modelUserChatList.at(0).attributes.toUser == newMessage.fromUser){
-									console.log("marking read");
-									var unReadMessageModel = indexRouter.modelUserChatList.where({messageRead:false});
-									console.log(unReadMessageModel);
-									_.each(unReadMessageModel,function(model){
-										console.log("marked read");
-										model.set("messageRead",true);
-									});
+								if(indexRouter.modelUserChatList){
+									if(indexRouter.modelUserChatList.at(0).attributes.fromUser == newMessage.fromUser 
+											|| indexRouter.modelUserChatList.at(0).attributes.toUser == newMessage.fromUser){
+										console.log("marking read");
+										var unReadMessageModel = indexRouter.modelUserChatList.where({messageRead:false});
+										_.each(unReadMessageModel,function(model){
+											console.log("marked read");
+											model.set("messageRead",true);
+										});
+									}
+									return;
 								}
-								return;
 							}
-							console.log(JSON.stringify(newMessage));
 							if(indexRouter.modelUserChatList !=null || indexRouter.modelUserChatList!=undefined){
 								//match the first msg's fromUser or sentUser in the messages list with new msg the to update 
 								//the userslist or current chat accordingly.
@@ -124,7 +141,7 @@ define(function(require){
 										|| indexRouter.modelUserChatList.at(0).attributes.toUser == newMessage.fromUser){
 									console.log('here1');
 									if(indexRouter.modelUserChatList.at(0).attributes.success=="false"){
-										console.log("here 1.1")
+										console.log("here 1.1");
 										//when current user has no message from the user whose chat window is open
 										//and then he gets a msg.
 										require(["chat/view/viewChat"],function(viewChat){
@@ -137,7 +154,7 @@ define(function(require){
 									else{
 										//when the current user has msg from the user he is currently chating with, so add the msg
 										//to the current chat.
-										console.log("here 1.2")
+										console.log("here 1.2");
 										indexRouter.modelUserChatList.add(newMessage);
 									}
 									indexRouter.stompClient.send("/messages/read", {}, JSON.stringify({ "fromUser": newMessage.fromUser,
@@ -158,7 +175,6 @@ define(function(require){
 								if(indexRouter.modelUsersList !=null || indexRouter.modelUsersList!=undefined){
 									var messageFrom = indexRouter.modelUsersList.findWhere({username:newMessage.fromUser});
 									messageFrom.set("unReadMessages",Number(messageFrom.get('unReadMessages'))+1);
-//									indexRouter.viewUsersList.render();
 								}
 								if(indexRouter.undreadMessageCount){
 									indexRouter.undreadMessageCount.set("count",indexRouter.permissions.userDetails.unReadMessage);
@@ -166,8 +182,23 @@ define(function(require){
 								}
 							}
 						});	
+						indexRouter.stompClient.subscribe("/user/websocket/file",function(frame){
+							var message = JSON.parse(frame.body);
+							if(indexRouter.modelFiles){
+								if(indexRouter.modelFiles.at(0).attributes.success==undefined){
+									indexRouter.modelFiles.add(message);
+								}else if(indexRouter.modelFiles.at(0).attributes.success=="false"){
+									indexRouter.modelFiles.reset(message);
+									var viewFilesList = require("chat/view/viewChat");
+									$("#idFilesDiv").html(new viewFilesList.ViewFilesList({collection:indexRouter.modelFiles}).render().el);
+								}
+							}
+							var messageFrom = indexRouter.modelUsersList.findWhere({username:message.fromUser});
+							messageFrom.set("unReadMessages",Number(messageFrom.get('unReadMessages'))+1);
+						});
+						
 					});
-				})
+				});
 			}
 		}
 

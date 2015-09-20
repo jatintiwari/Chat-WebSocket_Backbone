@@ -6,8 +6,8 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,7 +41,8 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/websocket")
-	public String websocketPage() {
+	public String websocketPage(HttpServletRequest request,Model model) {
+		Log.info(LoginUtil.getCurrentUsername()+" :: "+request.getRemoteAddr());
 		return "websocket.jsp";
 	}
 	

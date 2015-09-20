@@ -59,7 +59,6 @@ define(function(require){
 				var year = now.getUTCFullYear();
 				
 				var today= date+"/"+month+"/"+year;
-				console.log(today+" "+currentTime)
 				return today+"  "+currentTime;
 			}
 

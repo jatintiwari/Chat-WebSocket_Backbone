@@ -7,7 +7,7 @@ import java.util.TimeZone;
 
 public class TimeConversion {
 	
-	private static Long getTime(){
+	public static Long getTime(){
 		Calendar calendar = Calendar.getInstance();
 	    TimeZone fromTimeZone = calendar.getTimeZone();
 	    TimeZone toTimeZone = TimeZone.getTimeZone("IST");

@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +16,7 @@ public class WebMessage {
 	private Long id;
 	private String fromUser;
 	private String toUser;
+	@Lob
 	private String message;
 	private Long date;
 	private Long time;
@@ -62,6 +64,5 @@ public class WebMessage {
 	public void setMessageRead(boolean messageRead) {
 		this.messageRead = messageRead;
 	}
-	
 
 }

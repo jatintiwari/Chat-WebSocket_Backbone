@@ -7,3 +7,6 @@ Rendering the real time updates, frame tranfers and notification using BackboneJ
 #Spring WebSockets
 StompJS: Proviced a sub-protocol for the tranfer of messages over WebSocket<br>
 SockJS: Provides transparent fall back mechanism to XHR Streaming, XHR polling for the browser who doesn't support websocket.
+
+#File Upload
+Currently default file size i.e. upto 64 Kb is allowed

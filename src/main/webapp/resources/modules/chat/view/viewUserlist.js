@@ -52,6 +52,6 @@ define(function(require){
 	
 	return {
 		ViewUsersList:ViewUsersList
-	}
+	};
 	
 });

@@ -7,7 +7,7 @@ define(function(require){
 	
 	var ModelChatMessage = Backbone.Model.extend({
 		
-		url:"message",
+		url:"/message",
 		
 		defaults:{
 			id:null,

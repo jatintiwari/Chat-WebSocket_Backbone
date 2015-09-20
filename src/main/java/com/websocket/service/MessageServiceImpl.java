@@ -7,7 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.websocket.dao.FileDao;
 import com.websocket.dao.MessageDao;
+import com.websocket.model.WebFile;
 import com.websocket.model.WebMessage;
 
 @Service
@@ -15,6 +17,9 @@ public class MessageServiceImpl implements MessageService {
 	
 	@Autowired
 	MessageDao messageDao;
+	
+	@Autowired
+	FileDao fileDao;
 
 	@Transactional
 	@Override
@@ -44,6 +49,24 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public Long getUnReadMessageCountForUser(String username) {
 		return messageDao.getUnReadMessageCountForUser(username);
+	}
+
+	@Override
+	@Transactional
+	public Long saveFile(WebFile file) {
+		return fileDao.save(file);
+	}
+
+	@Override
+	@Transactional
+	public Collection<WebFile> getFiles(String currentUser, String fromUser) {
+		return fileDao.getFiles(currentUser,fromUser);
+	}
+
+	@Override
+	@Transactional
+	public WebFile getFile(String name) {
+		return fileDao.getFile(name);
 	}
 
 }
